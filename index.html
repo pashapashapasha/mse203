@@ -1,548 +1,805 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MS&amp;E 203: Building and Evaluating AI Products and Agents</title>
-  <meta name="description" content="Stanford MS&E 203: Building and Evaluating AI Products and Agents. A project-based course on building AI products and agents end-to-end. Fall 2026." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --cardinal: #8C1515;
-      --cardinal-dark: #6d1010;
-      --ink: #1e293b;
-      --body: #334155;
-      --muted: #64748b;
-      --faint: #94a3b8;
-      --bg: #ffffff;
-      --card-bg: #f8f9fa;
-      --line: #e2e8f0;
-      --card-line: #d9dee5;
-      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --measure: 780px;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MS&amp;E 203: Building and Evaluating AI Products and Agents — Stanford, Fall 2026</title>
+<meta name="description" content="Course page for Stanford MS&amp;E 203 (Fall 2026): a project-based class on AI products and agents taught by Madeleine Udell with practitioners from Scorecard AI and Google DeepMind. Schedule, grading, starter projects, and FAQ.">
+<!-- ============================================================
+     INTEREST FORM: set FORM_URL once in the <script> at the bottom
+     of this file — every "Get updates" / "Join the interest list"
+     button is stamped from that single constant.
+     ============================================================ -->
+<style>
+:root{
+  --nav-h:58px;
+  --paper:#FBFAF7;
+  --ink:#1E1A18;
+  --ink-2:#5C554F;
+  --line:#E6E1D8;
+  --card:#FFFFFF;
+  --cardinal:#8C1515;
+  --cardinal-deep:#5E0E0E;
+  --cardinal-wash:#F6ECEC;
+  --green:#175E54;
+  --green-wash:#EAF1EF;
+  --badge-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(30,26,24,.05),0 8px 24px -18px rgba(30,26,24,.25);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+}
+/* Dark tokens repeat under @media and [data-theme] on purpose: the media
+   query carries the OS preference; the [data-theme] blocks let a host
+   (e.g. an artifact viewer) stamp an explicit override that must win in
+   both directions. Keep all three in sync when editing the palette. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171310;
+    --ink:#EDE7DF;
+    --ink-2:#A79D93;
+    --line:#332C27;
+    --card:#1F1A16;
+    --cardinal:#E06C6C;
+    --cardinal-deep:#EE9090;
+    --cardinal-wash:#31201E;
+    --green:#63A79A;
+    --green-wash:#1E2B28;
+    --badge-ink:#171310;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="light"]{
+  --paper:#FBFAF7; --ink:#1E1A18; --ink-2:#5C554F; --line:#E6E1D8; --card:#FFFFFF;
+  --cardinal:#8C1515; --cardinal-deep:#5E0E0E; --cardinal-wash:#F6ECEC;
+  --green:#175E54; --green-wash:#EAF1EF; --badge-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(30,26,24,.05),0 8px 24px -18px rgba(30,26,24,.25);
+}
+:root[data-theme="dark"]{
+  --paper:#171310; --ink:#EDE7DF; --ink-2:#A79D93; --line:#332C27; --card:#1F1A16;
+  --cardinal:#E06C6C; --cardinal-deep:#EE9090; --cardinal-wash:#31201E;
+  --green:#63A79A; --green-wash:#1E2B28; --badge-ink:#171310;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -18px rgba(0,0,0,.8);
+}
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 20px)}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--cardinal);text-decoration-thickness:1px;text-underline-offset:2.5px}
+a:hover{color:var(--cardinal-deep)}
+:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0 0 .9em}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--cardinal);color:var(--badge-ink);padding:10px 18px;z-index:100;border-radius:0 0 6px 0}
+.skip-link:focus{left:0}
+.eyebrow{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cardinal);display:block;margin-bottom:10px;
+}
+section{padding:34px 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(1.4rem,2.6vw,1.7rem);margin-bottom:10px}
+.lede{font-size:1.02rem;color:var(--ink-2);max-width:68ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--body);
-      font-family: var(--sans);
-      font-size: 16.5px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
+/* ---------- Stanford band + nav ---------- */
+.uniband{background:#8C1515;color:#fff}
+.uniband .wrap{display:flex;justify-content:space-between;align-items:center;height:34px}
+.uniband .uni{font-family:var(--serif);font-size:.95rem;letter-spacing:.02em;color:#fff;text-decoration:none}
+.uniband .dept{font-family:var(--sans);font-size:.72rem;color:rgba(255,255,255,.85)}
+@media (max-width:560px){.uniband .dept{display:none}}
+.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;align-items:center;gap:20px;height:var(--nav-h)}
+.wordmark{font-family:var(--mono);font-size:.85rem;letter-spacing:.06em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.wordmark b{color:var(--cardinal);font-weight:700}
+.nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
+.nav-links a:not(.btn){font-size:.85rem;color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:6px}
+.nav-links a:not(.btn):hover{color:var(--ink);background:var(--cardinal-wash)}
+.btn{
+  display:inline-block;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;
+  padding:9px 16px;border-radius:6px;text-decoration:none;border:1px solid var(--cardinal);
+  transition:background .15s,color .15s;
+}
+.btn-solid{background:var(--cardinal);color:var(--badge-ink)}
+.btn-solid:hover{background:var(--cardinal-deep);border-color:var(--cardinal-deep);color:var(--badge-ink)}
+.btn-ghost{color:var(--cardinal)}
+.btn-ghost:hover{background:var(--cardinal-wash);color:var(--cardinal-deep)}
+.nav .btn{padding:6px 13px}
+.nav-toggle{
+  display:none;margin-left:auto;background:none;border:1px solid var(--line);border-radius:6px;
+  color:var(--ink);font-family:var(--mono);font-size:.78rem;padding:7px 12px;cursor:pointer;
+}
+@media (max-width:840px){
+  .nav-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;top:var(--nav-h);left:0;right:0;background:var(--paper);
+    border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;
+    padding:10px 24px 18px;gap:2px;margin-left:0;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a:not(.btn){padding:10px 8px;font-size:1rem}
+  .nav-links .btn{margin-top:8px;text-align:center;padding:10px 16px}
+}
 
-    a { color: var(--cardinal); text-decoration: none; }
-    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* ---------- Hero ---------- */
+.hero{padding:38px 0 34px;border-top:none}
+.hero .eyebrow{color:var(--green)}
+.hero h1{font-size:clamp(1.9rem,4vw,2.6rem);max-width:24ch;margin-bottom:12px}
+.hero .pitch{font-size:1.05rem;color:var(--ink-2);max-width:66ch;margin-bottom:18px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
 
-    .wrap { max-width: var(--measure); margin: 0 auto; padding: 0 24px; }
+/* quarter strip */
+.strip-caption{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:10px}
+.strip{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.strip .cell{border-radius:6px;padding:8px 0 6px;text-align:center;border:1px solid var(--line);background:var(--card)}
+.strip .cell .wk{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);display:block}
+.strip .cell.team{background:var(--green-wash);border-color:transparent}
+.strip .cell.gate{background:var(--cardinal);border-color:var(--cardinal)}
+.strip .cell.gate .wk{color:var(--badge-ink);font-weight:700}
+.strip-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px}
+.strip-legend span{font-size:.78rem;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.dot-solo{background:var(--card);border:1px solid var(--line)}
+.dot-team{background:var(--green-wash)}
+.dot-gate{background:var(--cardinal)}
+.gate-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.gate-notes div{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);line-height:1.45}
+.gate-notes b{color:var(--cardinal);font-weight:700}
+@media (max-width:560px){
+  .strip{gap:4px}
+  .strip .cell{padding:6px 0 4px}
+  .gate-notes{grid-template-columns:1fr;gap:2px}
+}
 
-    /* ===== Hero ===== */
-    .hero {
-      background: radial-gradient(120% 140% at 50% 0%, #a01b1b 0%, var(--cardinal) 45%, var(--cardinal-dark) 100%);
-      color: #fff;
-      text-align: center;
-      padding: 72px 24px 64px;
-    }
-    .hero h1 {
-      margin: 0 auto;
-      max-width: 15em;
-      font-size: clamp(1.9rem, 5.4vw, 2.9rem);
-      font-weight: 700;
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-    }
-    .hero .sub {
-      margin: 20px 0 0;
-      font-size: clamp(1.05rem, 2.6vw, 1.35rem);
-      font-weight: 400;
-      color: rgba(255,255,255,0.92);
-    }
-    .hero .sub .sep { margin: 0 10px; opacity: 0.8; }
+/* ---------- At a glance ---------- */
+.glance{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.glance .g{padding:12px 14px 10px}
+.glance .g .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:5px}
+.glance .g .v{font-size:.92rem;line-height:1.4}
+@media (max-width:760px){.glance{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.glance{grid-template-columns:1fr}}
 
-    /* ===== Tab nav ===== */
-    .tabs {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(255,255,255,0.94);
-      backdrop-filter: saturate(140%) blur(10px);
-      -webkit-backdrop-filter: saturate(140%) blur(10px);
-      border-bottom: 1px solid var(--line);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    }
-    .tabs-inner {
-      max-width: var(--measure);
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 0 12px;
-      scrollbar-width: none;
-    }
-    .tabs-inner::-webkit-scrollbar { display: none; }
-    .tabs a {
-      display: block;
-      padding: 16px 18px 13px;
-      font-size: 15.5px;
-      font-weight: 500;
-      color: var(--muted);
-      border-bottom: 3px solid transparent;
-      white-space: nowrap;
-    }
-    .tabs a:hover { color: var(--cardinal); text-decoration: none; }
-    @media (max-width: 640px) {
-      .tabs-inner { justify-content: flex-start; padding: 0 8px; }
-      .tabs a { padding: 14px 12px 11px; font-size: 14px; }
-    }
+/* ---------- Learning goals ---------- */
+.goals{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 24px;margin-top:26px}
+@media (max-width:1000px){.goals{grid-template-columns:1fr 1fr}}
+.goal{border-top:2px solid var(--cardinal);padding-top:10px}
+.goal h3{font-size:.98rem;margin-bottom:5px}
+.goal p{font-size:.87rem;color:var(--ink-2);margin:0}
+@media (max-width:560px){.goals{grid-template-columns:1fr}}
 
-    /* ===== Sections ===== */
-    main { padding: 16px 0 24px; }
-    section { padding: 40px 0 8px; scroll-margin-top: 24px; }
-    h2 {
-      color: var(--ink);
-      font-size: clamp(1.65rem, 4vw, 2.1rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin: 0 0 14px;
-      padding-bottom: 14px;
-      border-bottom: 3px solid var(--cardinal);
-    }
-    h3 { color: var(--ink); font-size: 1.12rem; font-weight: 700; margin: 26px 0 8px; }
-    p { margin: 0 0 16px; }
+/* ---------- Schedule ---------- */
+.phase-h{display:flex;align-items:baseline;gap:12px;margin:20px 0 4px;flex-wrap:wrap}
+.phase-h h3{font-size:1.15rem}
+.phase-h .range{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--green);text-transform:uppercase}
+.phase-sub{color:var(--ink-2);font-size:.9rem;margin-bottom:14px}
+.weeks{border-top:1px solid var(--line)}
+.week{border-bottom:1px solid var(--line)}
+.week summary{
+  cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:14px;
+  padding:11px 4px;flex-wrap:wrap;
+}
+.week summary::-webkit-details-marker{display:none}
+.week .wknum{font-family:var(--mono);font-size:.78rem;color:var(--ink-2);min-width:52px;font-variant-numeric:tabular-nums}
+.week .wtitle{font-family:var(--serif);font-weight:600;font-size:1.05rem;flex:1 1 auto;min-width:0}
+.week summary .tag{flex:0 0 auto}
+.week summary::after{content:"+";font-family:var(--mono);color:var(--cardinal);margin-left:auto;font-size:1rem}
+.week[open] summary::after{content:"−"}
+.week .body{padding:2px 4px 16px 66px}
+.week .obj{font-size:.92rem;color:var(--ink-2);margin-bottom:10px;max-width:72ch}
+.tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.tag-due{background:var(--green-wash);color:var(--green)}
+.tag-gate{background:var(--cardinal);color:var(--badge-ink);font-weight:700}
+.week .reads{font-size:.86rem;color:var(--ink-2)}
+.week .reads .rlabel{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.week .reads ul{margin:0;padding-left:18px}
+.week .reads li{margin-bottom:4px}
+.week .reads .opt{opacity:.75}
+@media (max-width:560px){
+  .week .body{padding-left:4px}
+  .week summary .tag{display:none}   /* badges shown inside body on phones */
+  .week .body .tag{display:inline-block;margin-bottom:8px;white-space:normal;line-height:1.5}
+}
+@media (min-width:561px){
+  .week .body > .tag{display:none}   /* avoid duplicate badges on desktop */
+}
 
-    ul.goals { padding-left: 24px; margin: 0; }
-    ul.goals > li { margin-bottom: 14px; }
-    ul.goals strong { color: var(--ink); }
+/* ---------- Onboarding & modules / generic accordion cards ---------- */
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px;align-items:start}
+@media (max-width:840px){.modules{grid-template-columns:1fr}}
+.module{padding:0}
+.module summary{cursor:pointer;padding:12px 18px;display:flex;gap:12px;align-items:baseline;list-style:none}
+.module summary::-webkit-details-marker{display:none}
+.module summary::after{content:"+";font-family:var(--mono);color:var(--cardinal);margin-left:auto}
+.module[open] summary::after{content:"−"}
+.module summary .m{font-family:var(--mono);font-size:.7rem;color:var(--green);white-space:nowrap}
+.module summary .t{font-weight:600;font-size:.93rem}
+.module summary .d{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);white-space:nowrap}
+.module p{padding:0 18px 14px;margin:0;font-size:.9rem;color:var(--ink-2);max-width:80ch}
+@media (max-width:560px){.module summary .d{display:none}}
 
-    /* ===== Instructor cards ===== */
-    .instructors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
-    @media (max-width: 680px) { .instructors { grid-template-columns: 1fr; } }
-    .instructor {
-      background: var(--card-bg);
-      border: 1px solid var(--card-line);
-      border-radius: 12px;
-      padding: 20px;
-    }
-    .instructor .name { color: var(--ink); font-size: 1.08rem; font-weight: 700; margin: 0 0 4px; }
-    .instructor .role { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin: 0 0 12px; }
-    .instructor .link { font-size: 13.5px; font-weight: 600; }
+/* ---------- Projects ---------- */
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.proj{padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.proj h3{font-size:1rem;margin-bottom:8px}
+.proj p{font-size:.88rem;color:var(--ink-2);flex-grow:1}
+.proj .lesson{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;color:var(--green);border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+@media (max-width:760px){.projects{grid-template-columns:1fr}}
 
-    /* ===== Week cards ===== */
-    .phase {
-      margin: 30px 0 18px;
-    }
-    .phase .phase-title {
-      color: var(--cardinal);
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      margin: 0 0 4px;
-    }
-    .phase .phase-sub { font-size: 14.5px; color: var(--muted); margin: 0; }
+/* ---------- Speakers ---------- */
+.spk-cats{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 12px}
+.spk-cats div{border:1px solid var(--line);border-left:3px solid var(--cardinal);border-radius:0 8px 8px 0;padding:8px 14px;font-size:.88rem;background:var(--card)}
+.spk-note{font-family:var(--mono);font-size:.76rem;color:var(--ink-2)}
 
-    .week-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-line);
-      border-radius: 12px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .week-card .head {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--card-line);
-    }
-    .week-card .head h3 {
-      margin: 0;
-      font-size: 1.22rem;
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.35;
-    }
-    .week-card .body { padding: 18px 24px 20px; }
-    .week-card h4 {
-      color: var(--cardinal);
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 16px 0 8px;
-    }
-    .week-card h4:first-child { margin-top: 0; }
-    .week-card p { font-size: 15px; margin: 0 0 8px; }
-    .week-card ul { margin: 0; padding-left: 22px; font-size: 15px; }
-    .week-card li { margin-bottom: 6px; }
-    .week-card .gate { color: var(--cardinal); font-weight: 600; }
-    .week-card .opt { color: var(--muted); }
+/* ---------- Grading & policies ---------- */
+.gradegrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 36px;margin-top:24px;align-items:start}
+@media (max-width:840px){.gradegrid{grid-template-columns:1fr}}
+.gradebars{display:grid;gap:16px}
+.gbar .glabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.gbar .glabel .n{font-weight:600;font-size:.95rem}
+.gbar .glabel .pct{font-family:var(--mono);font-size:.92rem;color:var(--cardinal);font-weight:700;font-variant-numeric:tabular-nums}
+.gbar .track{height:12px;border-radius:4px;background:var(--card);border:1px solid var(--line);position:relative;overflow:hidden}
+.gbar .track::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:25% 100%;opacity:.6;
+}
+.gbar .fill{height:100%;background:var(--cardinal);position:relative;z-index:1}
+.gbar .fill.alt{background:var(--green)}
+.gbar .sub{font-size:.83rem;color:var(--ink-2);margin-top:5px}
+.gradecols{display:grid;gap:18px}
+.gradecols h3{font-size:1rem;margin-bottom:8px}
+.gradecols ul{margin:0;padding-left:20px;font-size:.9rem;color:var(--ink-2)}
+.gradecols li{margin-bottom:6px}
+.floor{margin-top:20px;background:var(--cardinal-wash);border:1px solid var(--line);border-radius:10px;padding:13px 17px;font-size:.89rem}
+.polrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.polrow div{border:1px solid var(--line);border-radius:8px;padding:9px 13px;background:var(--card);font-size:.85rem;color:var(--ink-2)}
+.polrow b{color:var(--ink)}
 
-    /* ===== Grading table ===== */
-    .grade-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15.5px; }
-    .grade-table th {
-      text-align: left;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #fff;
-      background: var(--cardinal);
-      padding: 12px 16px;
-      font-weight: 600;
-    }
-    .grade-table th:last-child, .grade-table td.wt { text-align: right; }
-    .grade-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
-    .grade-table tr:nth-child(even) td { background: var(--card-bg); }
-    .grade-table .cat { font-weight: 700; color: var(--ink); white-space: nowrap; }
-    .grade-table td ul { margin: 0; padding-left: 18px; }
-    .grade-table .wt { font-weight: 700; color: var(--cardinal); font-size: 1.1rem; white-space: nowrap; }
+/* ---------- Instructors ---------- */
+.people{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.person{padding:16px;box-shadow:var(--shadow)}
+.ava{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:1.05rem;font-weight:600;margin-bottom:12px;
+  background:var(--cardinal-wash);color:var(--cardinal);
+}
+.person:nth-child(2) .ava{background:var(--green-wash);color:var(--green)}
+.person h3{font-size:1.05rem;margin-bottom:2px}
+.person .role{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:10px}
+.person p{font-size:.87rem;color:var(--ink-2);margin-bottom:10px}
+.person .plink{font-size:.83rem}
+@media (max-width:760px){.people{grid-template-columns:1fr}}
 
-    /* ===== Appendix cards ===== */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-line);
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 16px;
-    }
-    .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
-    .card p { font-size: 15px; margin: 0; }
-    .card p + p { margin-top: 8px; }
-    .card .time { font-size: 13px; font-weight: 500; color: var(--muted); }
+/* ---------- FAQ ---------- */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;border-top:1px solid var(--line);align-items:start}
+@media (max-width:840px){.faq{grid-template-columns:1fr}}
+.qa{border-bottom:1px solid var(--line)}
+.qa summary{cursor:pointer;padding:13px 4px;font-weight:600;font-size:.95rem;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";font-family:var(--mono);color:var(--cardinal);font-size:1rem;flex-shrink:0}
+.qa[open] summary::after{content:"−"}
+.qa p{padding:0 4px 14px;margin:0;color:var(--ink-2);font-size:.9rem;max-width:68ch}
 
-    /* ===== Footer ===== */
-    footer {
-      margin-top: 48px;
-      background: var(--cardinal-dark);
-      color: rgba(255,255,255,0.85);
-      text-align: center;
-      padding: 32px 24px;
-      font-size: 14px;
-    }
-    footer .t { font-weight: 600; color: #fff; margin: 0 0 6px; }
-    footer p { margin: 0; }
-  </style>
+/* ---------- Updates / footer ---------- */
+#updates{border-top:none;padding-top:0}
+.updates{padding:22px 26px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:var(--shadow);border-radius:12px}
+.updates h2{font-size:1.3rem;margin-bottom:4px}
+.updates p{margin:0;color:var(--ink-2);max-width:50ch;font-size:.92rem}
+footer{border-top:1px solid var(--line);padding:24px 0 32px;margin-top:34px}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-2)}
+.foot .fm{font-family:var(--mono);font-size:.73rem}
+.sulegal{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-2)}
+</style>
 </head>
 <body>
-  <header class="hero">
-    <h1>MS&amp;E 203: Building and Evaluating AI Products and Agents</h1>
-    <p class="sub">Stanford University <span class="sep">•</span> Fall 2026</p>
-  </header>
 
-  <nav class="tabs">
-    <div class="tabs-inner">
+<a href="#overview" class="skip-link">Skip to content</a>
+<div class="uniband">
+  <div class="wrap">
+    <a class="uni" href="https://www.stanford.edu">Stanford University</a>
+    <span class="dept">Department of Management Science &amp; Engineering</span>
+  </div>
+</div>
+<nav class="nav" aria-label="Main">
+  <div class="wrap nav-inner">
+    <a class="wordmark" href="#top"><b>MS&amp;E&nbsp;203</b> · Fall 2026</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="navlinks" id="navToggle">Menu</button>
+    <div class="nav-links" id="navlinks">
       <a href="#overview">Overview</a>
-      <a href="#instructors">Instructors</a>
       <a href="#schedule">Schedule</a>
+      <a href="#projects">Projects</a>
+      <a href="#speakers">Speakers</a>
       <a href="#grading">Grading</a>
-      <a href="#appendix">Appendices</a>
+      <a href="#instructors">Instructors</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-solid" href="#" data-form>Get updates</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <main class="wrap">
-    <section id="overview">
-      <h2>Course Description</h2>
-      <p>A project-based course on building AI products and agents end-to-end. Students build a real product over the quarter, justifying AI fit, navigating latency, quality, and cost trade-offs, and rigorously evaluating their own system. The course moves from an individual mechanics phase into a team build, ending in a Demo Day. The topic arc moves from building the right thing, to evaluating and improving it, to designing, stress-testing, and shipping.</p>
-      <p>A 3-unit course with one 2-hour session per week for 10 weeks; each session is roughly 1 hour of lecture and reading discussion plus 1 hour of lab (workshop, project work, or guest Q&amp;A). Demo Day (Week 10) is an extended session. Designed primarily for upper-division undergraduates and master's students, with target majors including MS&amp;E, CS, Symbolic Systems, and EE; open to all Stanford students. Enrollment is capped at 12 teams of 4 students (48 students total).</p>
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">Stanford MS&amp;E 203 · Fall 2026 · New course</span>
+    <h1>Building and Evaluating AI Products and Agents</h1>
+    <p class="pitch">Build a real AI product over ten weeks — and prove it works. A project-based course on taking AI products and agents from idea to Demo Day: justifying AI fit, navigating latency–quality–cost trade-offs, and rigorously evaluating your own system.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-solid" href="#" data-form>Join the interest list</a>
+      <a class="btn btn-ghost" href="#schedule">See the schedule</a>
+    </div>
 
-      <h3>Learning Goals</h3>
-      <p>By the end of the course, students will be able to:</p>
-      <ul class="goals">
-        <li><strong>Diagnose AI-fit and make AI-specific tradeoffs.</strong> Determine when AI is the right tool for a problem, vs. when it's a bad fit or overkill. Understand and optimize for the novel tradeoffs that AI introduces, like latency, quality, cost, non-determinism, etc.</li>
-        <li><strong>Evaluate AI products rigorously.</strong> Design eval strategies and name what they do not cover (e.g., recognizing when LLM-as-judge needs human validation, or when sim-user testing won't catch real-user failure modes).</li>
-        <li><strong>State what they are optimizing for.</strong> Translate a product goal into measurable success criteria (e.g., turning "help engineers write code faster" into suggestion acceptance rate, as GitHub Copilot does at roughly 30%).</li>
-        <li><strong>Account for failure.</strong> Identify how an AI product can fail at the system level and design safeguards (e.g., the Air Canada chatbot that hallucinated a refund policy the airline was then legally bound to honor).</li>
-      </ul>
+    <p class="strip-caption">The quarter at a glance</p>
+    <div class="strip" role="img" aria-label="Ten-week course timeline. Weeks 1 to 3: individual phase. Weeks 4 to 10: team phase, with gates in week 4 (proposal), week 7 (midterm), and week 10 (Demo Day).">
+      <div class="cell"><span class="wk">01</span></div>
+      <div class="cell"><span class="wk">02</span></div>
+      <div class="cell"><span class="wk">03</span></div>
+      <div class="cell gate"><span class="wk">04</span></div>
+      <div class="cell team"><span class="wk">05</span></div>
+      <div class="cell team"><span class="wk">06</span></div>
+      <div class="cell gate"><span class="wk">07</span></div>
+      <div class="cell team"><span class="wk">08</span></div>
+      <div class="cell team"><span class="wk">09</span></div>
+      <div class="cell gate"><span class="wk">10</span></div>
+    </div>
+    <div class="strip-legend">
+      <span><i class="dot dot-solo"></i>Individual phase (Weeks 1–3)</span>
+      <span><i class="dot dot-team"></i>Team phase (Weeks 4–10)</span>
+      <span><i class="dot dot-gate"></i>Gates</span>
+    </div>
+    <div class="gate-notes">
+      <div><b>Gate 1 · Wk 4</b><br>Teams form · project proposal</div>
+      <div><b>Gate 2 · Wk 7</b><br>Midterm report · working build</div>
+      <div><b>Gate 3 · Wk 10</b><br>Demo Day · final report</div>
+    </div>
+  </div>
+</header>
 
-      <h3>Prerequisites &amp; Onboarding</h3>
-      <p>CS 106A or equivalent required; probability or statistics coursework (e.g., CS 109, EE 178/278, MS&amp;E 120/220, MS&amp;E 125, STATS 116, CME 106, MATH 151) recommended.</p>
-      <p>Enrolled students complete onboarding modules covering git and AI coding tool basics (Cursor, Claude Code, or Antigravity), API setup and key handling, database basics, and deployment and stats. Each module is delivered as a live walkthrough on Google Meet in the first weeks, with the content in a shared doc open for comments; the modules (or equivalent knowledge) should be completed by the Week 3 session. Full module descriptions are in <a href="#appendix">Appendix A</a>.</p>
-    </section>
+<main>
+<section id="overview">
+  <div class="wrap">
+    <span class="eyebrow">Overview</span>
+    <h2>An end-to-end build, with evaluation at the center</h2>
+    <p class="lede">Weeks 1–3 give every student a solo rep: problem, prototype, evaluation. Teams of four then carry one product through a proposal, a midterm build, and a judged Demo Day. Each weekly session pairs an hour of lecture and reading discussion with an hour of lab: workshop, project work, or guest Q&amp;A.</p>
 
-    <section id="instructors">
-      <h2>Instructors</h2>
-      <div class="instructors">
-        <div class="instructor">
-          <p class="name">Prof. Madeleine Udell</p>
-          <p class="role">Professor, Management Science &amp; Engineering, Stanford University</p>
-          <a class="link" href="https://web.stanford.edu/~udell/" target="_blank" rel="noopener">Stanford website →</a>
-        </div>
-        <div class="instructor">
-          <p class="name">Darius Emrani</p>
-          <p class="role">CEO, Scorecard AI · ex-Waymo simulation and evaluation</p>
-          <a class="link" href="https://www.linkedin.com/in/dariusemrani" target="_blank" rel="noopener">LinkedIn →</a>
-        </div>
-        <div class="instructor">
-          <p class="name">Pasha Nahass</p>
-          <p class="role">Product Lead, Google DeepMind, Gemini App</p>
-          <a class="link" href="https://www.linkedin.com/in/pasha-nahass-b5aa3628" target="_blank" rel="noopener">LinkedIn →</a>
-        </div>
+    <div class="glance">
+      <div class="g card"><span class="k">Format</span><span class="v">3 units · one 2-hour session per week for 10 weeks</span></div>
+      <div class="g card"><span class="k">Enrollment</span><span class="v">Capped at 48 students — 12 teams of 4</span></div>
+      <div class="g card"><span class="k">Prerequisites</span><span class="v">CS 106A or equivalent; probability/statistics recommended</span></div>
+      <div class="g card"><span class="k">Audience</span><span class="v">Open to all Stanford students; designed for upper-division undergrads &amp; master's</span></div>
+      <div class="g card"><span class="k">Demo Day</span><span class="v">Week 10, extended session, before outside judges</span></div>
+      <div class="g card"><span class="k">Time &amp; location</span><span class="v">TBA</span></div>
+    </div>
+
+    <div class="goals">
+      <div class="goal">
+        <h3>Diagnose AI fit and make AI-specific trade-offs</h3>
+        <p>Know when AI is the right tool, and when it's a bad fit or overkill. Optimize the trade-offs AI introduces: latency, quality, cost, non-determinism.</p>
       </div>
-    </section>
-
-    <section id="schedule">
-      <h2>Course Schedule</h2>
-      <p style="font-size:14.5px;color:var(--muted);">Deliverables are due at noon the day of class.</p>
-
-      <div class="phase">
-        <p class="phase-title">Individual Phase · Weeks 1–3</p>
-        <p class="phase-sub">Each student runs a compressed product cycle solo.</p>
+      <div class="goal">
+        <h3>Evaluate AI products rigorously</h3>
+        <p>Design eval strategies and name what they don't cover: when LLM-as-judge needs human validation, or when simulated users won't catch real-user failures.</p>
       </div>
+      <div class="goal">
+        <h3>State what you are optimizing for</h3>
+        <p>Turn a product goal into measurable success criteria, the way "help engineers write code faster" becomes suggestion acceptance rate (~30% for GitHub Copilot).</p>
+      </div>
+      <div class="goal">
+        <h3>Account for failure</h3>
+        <p>Identify system-level failure modes and design safeguards. Air Canada's chatbot hallucinated a refund policy the airline was then legally bound to honor.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="week-card">
-        <div class="head"><h3>Week 1: Why AI Products Are Different</h3></div>
+<section id="schedule">
+  <div class="wrap">
+    <span class="eyebrow">Schedule</span>
+    <h2>Week by week</h2>
+    <p class="lede">Deliverables are due at noon the day of class. Expand any week for its focus and readings.</p>
+
+    <div class="phase-h"><h3>Individual Phase</h3><span class="range">Weeks 1–3</span></div>
+    <p class="phase-sub">Every student runs the full loop solo: pick a problem, assess AI fit, ship a prototype, evaluate it.</p>
+    <div class="weeks">
+      <details class="week">
+        <summary><span class="wknum">Wk 01</span> <span class="wtitle">Why AI products are different</span></summary>
         <div class="body">
-          <h4>Topics</h4>
-          <p>When is AI the right tool, and what is an "AI product"? Reason about the tradeoffs of probabilistic systems, treating today's constraints (non-determinism, latency, cost) as examples of a durable pattern, not a fixed list.</p>
-          <h4>Reading</h4>
+          <p class="obj">When is AI the right tool, and what is an "AI product"? Reason about the trade-offs of probabilistic systems, treating today's constraints (non-determinism, latency, cost) as examples of a durable pattern, not a fixed list.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Sculley et al., <a href="https://papers.neurips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf">"Hidden Technical Debt in Machine Learning Systems"</a> (NeurIPS, 2015)</li>
+              <li>Yan, <a href="https://eugeneyan.com/writing/llm-patterns/">"Patterns for Building LLM-based Systems &amp; Products"</a> (2023)</li>
+              <li class="opt">Optional: Karpathy, <a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ">"Software Is Changing (Again)"</a> (YC AI Startup School, 2025)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 02</span> <span class="wtitle">Product discovery in the age of AI</span> <span class="tag tag-due">Due: discovery brief</span></summary>
+        <div class="body">
+          <span class="tag tag-due">Due: discovery brief with AI-fit assessment</span>
+          <p class="obj">Surface real user needs through interviews and jobs-to-be-done; use AI to synthesize research while judging whether its output is genuine signal or sophisticated noise.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Christensen et al., <a href="https://hbr.org/2016/09/know-your-customers-jobs-to-be-done">"Know Your Customers' Jobs to Be Done"</a> (HBR, 2016)</li>
+              <li>Park et al., <a href="https://arxiv.org/abs/2411.10109">"Generative Agent Simulations of 1,000 People"</a> (2024)</li>
+              <li class="opt">Optional: Hämäläinen et al., "Evaluating LLMs in Generating Synthetic HCI Research Data" (CHI, 2023)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 03</span> <span class="wtitle">Evals fundamentals</span> <span class="tag tag-due">Due: working prototype</span></summary>
+        <div class="body">
+          <span class="tag tag-due">Due: working prototype of your discovery-brief idea</span>
+          <p class="obj">Build a prototype, then learn to tell whether it's any good: choose evaluation dimensions, score outputs, read benchmarks skeptically (Goodhart, gaming), and weigh human against automated judges. In-class lab: an interactive case study, then a workshop designing evals for your own prototype.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Zheng et al., <a href="https://arxiv.org/abs/2306.05685">"Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena"</a> (NeurIPS, 2023)</li>
+              <li>Miller, <a href="https://arxiv.org/abs/2411.00640">"Adding Error Bars to Evals"</a> (Anthropic, 2024)</li>
+              <li class="opt">Optional: Tan et al., <a href="https://arxiv.org/abs/2410.12784">"JudgeBench"</a> (2024) · Tyser et al., "AI-Driven Review Systems" (2024)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="phase-h"><h3>Team Phase</h3><span class="range">Weeks 4–10</span></div>
+    <p class="phase-sub">Teams of four form in Week 4 and build toward Demo Day, organized around three gates.</p>
+    <div class="weeks">
+      <details class="week">
+        <summary><span class="wknum">Wk 04</span> <span class="wtitle">Improving the product</span> <span class="tag tag-gate">Gate 1 · proposal</span></summary>
+        <div class="body">
+          <span class="tag tag-gate">Gate 1 · Teams form + project proposal (~3 pages)</span>
+          <p class="obj">Turn evaluation into an improvement loop: pick the right lever (prompt → retrieval → scaffolding → fine-tune → RL) and apply self-improvement methods, including adversarial and recursive self-improvement, while avoiding optimizing your measure into meaninglessness.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Ouyang et al., <a href="https://arxiv.org/abs/2203.02155">"Training Language Models to Follow Instructions with Human Feedback"</a> (InstructGPT, 2022)</li>
+              <li>Yuan et al., <a href="https://arxiv.org/abs/2401.10020">"Self-Rewarding Language Models"</a> (2024)</li>
+              <li class="opt">Optional: Christiano et al., <a href="https://arxiv.org/abs/1706.03741">"Deep RL from Human Preferences"</a> (NeurIPS, 2017)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 05</span> <span class="wtitle">Multi-turn evaluation and simulation</span></summary>
+        <div class="body">
+          <p class="obj">Judge behavior across whole interactions, and build simulated users to test at scale, anchoring on measuring the sim-to-real gap.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Yao et al., <a href="https://arxiv.org/abs/2406.12045">"τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains"</a> (2024)</li>
+              <li>"Lost in Simulation: LLM-Simulated Users are Unreliable Proxies for Human Users in Agentic Evaluations" (2026)</li>
+              <li class="opt">Optional: Anthropic, "Demystifying Evals for AI Agents" (2026)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 06</span> <span class="wtitle">User research beyond the metrics</span></summary>
+        <div class="body">
+          <p class="obj">Where qualitative research (sentiment, the felt experience, diary studies, AI-generated users) complements granular evals, and where it breaks down.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Amershi et al., <a href="https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/">"Guidelines for Human-AI Interaction"</a> (CHI, 2019)</li>
+              <li>"The Use of LLMs in HCI: A Critical Analysis of Synthetic Users" (Augmented Humans, 2025)</li>
+              <li class="opt">Optional: Weisz et al., <a href="https://arxiv.org/abs/2401.14484">"Design Principles for Generative AI Applications"</a> (CHI, 2024)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 07</span> <span class="wtitle">Case study: when AI products fail</span> <span class="tag tag-gate">Gate 2 · midterm</span></summary>
+        <div class="body">
+          <span class="tag tag-gate">Gate 2 · Midterm report (~5 pages) + working build</span>
+          <p class="obj">Diagnose real failures as systemic rather than single-cause, and identify the eval, guardrail, or research that would have caught each. Also due: eval feedback for two other teams.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Bainbridge, <a href="https://en.wikipedia.org/wiki/Ironies_of_Automation">"Ironies of Automation"</a> (Automatica, 1983)</li>
+              <li>OpenAI, <a href="https://openai.com/index/expanding-on-sycophancy/">"Expanding on What We Missed with Sycophancy"</a> (2025)</li>
+              <li class="opt">Case sourcing: "When AI Fails, What Works? A Data-Driven Taxonomy of Real-World Risk Mitigation Strategies" (2026)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 08</span> <span class="wtitle">Responsible AI</span></summary>
+        <div class="body">
+          <p class="obj">Red-team for worst-case and harmful behavior, address agentic safety risks such as destructive actions and leaked secrets, and weigh who sets the boundaries on AI use.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Amodei et al., <a href="https://arxiv.org/abs/1606.06565">"Concrete Problems in AI Safety"</a> (2016)</li>
+              <li>Ganguli et al., <a href="https://arxiv.org/abs/2209.07858">"Red Teaming Language Models to Reduce Harms"</a> (Anthropic, 2022)</li>
+              <li class="opt">Lab tool: Debenedetti et al., <a href="https://arxiv.org/abs/2406.13352">"AgentDojo"</a> (NeurIPS, 2024)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 09</span> <span class="wtitle">Case study: voice and multimodal</span></summary>
+        <div class="body">
+          <p class="obj">Evaluate beyond text, where latency, tone, turn-taking, and cross-modal grounding create new failure modes, worked through real product examples.</p>
+          <div class="reads"><span class="rlabel">Readings</span>
+            <ul>
+              <li>Clark &amp; Brennan, "Grounding in Communication" (1991)</li>
+              <li>Sierra, "τ-voice: Benchmarking Full-Duplex Voice Agents" (2026)</li>
+              <li class="opt">Optional: "MULTIVOX" (EMNLP, 2025) · "Full-Duplex-Bench" (2025) · <a href="https://arxiv.org/abs/2311.04287">HEIM</a> (NeurIPS, 2023)</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+      <details class="week">
+        <summary><span class="wknum">Wk 10</span> <span class="wtitle">Demo Day</span> <span class="tag tag-gate">Gate 3 · Demo Day</span></summary>
+        <div class="body">
+          <span class="tag tag-gate">Gate 3 · 12-min demo · final report (5–7 pages) due 72 hrs after class</span>
+          <p class="obj">Defend an evidence-backed ship-or-don't-ship call with your eval results and a concrete next-iteration plan, before outside judges. Extended session. Also due: peer feedback and ratings.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="onboarding">
+  <div class="wrap">
+    <span class="eyebrow">Prerequisites &amp; onboarding</span>
+    <h2>No AI experience required</h2>
+    <p class="lede">CS 106A or equivalent is required; probability or statistics coursework (e.g., CS 109, MS&amp;E 120/125, STATS 116, CME 106) is recommended. Optional onboarding modules cover everything else; their hands-on tasks chain into one small app you build, ship, and measure. Complete them, or arrive with equivalent knowledge, by Week 3.</p>
+    <div class="modules">
+      <details class="module card">
+        <summary><span class="m">M0</span> <span class="t">How LLMs actually work</span> <span class="d">~1–3.5 hrs · self-paced</span></summary>
+        <p>Watch Karpathy, <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">"Deep Dive into LLMs like ChatGPT"</a> (2025); at minimum the chapters on hallucinations and tool use, “models need tokens to think,” “jagged intelligence,” and RLHF, which ground the evaluation and failure-mode work in Weeks 3–7.</p>
+      </details>
+      <details class="module card">
+        <summary><span class="m">M1</span> <span class="t">Dev setup: Git and AI coding tools</span> <span class="d">~1.5 hrs · live</span></summary>
+        <p>A 20-minute git tutorial, then pick one AI coding tool (Cursor, Claude Code, or Antigravity) and skim its quickstart. Task: build something trivial from a plain-English prompt, then commit and push it to a new repo: a first rep of AI-assisted building before Week 3's prototype lab.</p>
+      </details>
+      <details class="module card">
+        <summary><span class="m">M2</span> <span class="t">Shipping a prototype: APIs, data, hosting</span> <span class="d">~1.5 hrs · live</span></summary>
+        <p>Get API access to a frontier model and make a first call; security basics (API key handling, separating code from customer data); a database quickstart; deploying on a web host. Task: extend your M1 app with a feature that calls a model API and stores the result, deployed to a live URL.</p>
+      </details>
+      <details class="module card">
+        <summary><span class="m">M3</span> <span class="t">Stats refresher</span> <span class="d">~30 min · self-paced</span></summary>
+        <p>Expected value, variance, and confidence intervals, drawn on when scoring outputs and reading error bars in Week 3. Mainly for students without the recommended probability/statistics coursework.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <span class="eyebrow">Starter projects</span>
+    <h2>Bring your own idea, or start from one of ours</h2>
+    <p class="lede">Teams may pick or adapt a starter project. Each is scoped to a seven-week build and teaches a distinct evaluation lesson.</p>
+    <div class="projects">
+      <div class="proj card">
+        <h3>Meeting notetaker with structured outputs</h3>
+        <p>A desktop assistant that runs alongside calls, captures typed shorthand plus audio, and produces action items and owner-tagged decisions. Hand-label real meetings, then build an LLM judge and measure its agreement with humans before trusting it at scale.</p>
+        <span class="lesson">Teaches: LLM-as-judge calibration</span>
+      </div>
+      <div class="proj card">
+        <h3>First-pass moderation for a real community</h3>
+        <p>Partner with one Discord, subreddit, or Slack and build the first-pass moderator: flag, route to a human, or auto-action. Build separate dashboards for false-positive and false-negative harms and defend your threshold choice.</p>
+        <span class="lesson">Teaches: asymmetric error costs</span>
+      </div>
+      <div class="proj card">
+        <h3>Fantasy draft copilot with model tiering</h3>
+        <p>Live-draft recommendations on fast, cheap inference; weekly start/sit advice with confidence intervals on slower, deeper analysis. Defend the routing decision between model tiers.</p>
+        <span class="lesson">Teaches: cost optimization via model tiering</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="speakers">
+  <div class="wrap">
+    <span class="eyebrow">Guest speakers</span>
+    <h2>Learn from the people shipping this</h2>
+    <p class="lede">Guest speakers join the lecture hour most weeks; outside judges score Demo Day. Speakers and judges are targeted at a high bar across the AI-product layer:</p>
+    <div class="spk-cats">
+      <div>Founder-CEOs who have shaped AI-era product thinking</div>
+      <div>Product leaders at frontier AI labs</div>
+      <div>CEOs of AI-native product companies</div>
+      <div>Practitioners building AI evaluation infrastructure</div>
+    </div>
+    <p class="spk-note">The lineup is announced at the start of the quarter.</p>
+    <p class="lede" style="margin-top:14px;font-size:.92rem"><b>For Demo Day judges:</b> Week 10 is an extended session. Judges watch 12-minute team demos and score each team's final recommendation, and the evaluation evidence behind it, against the course rubric.</p>
+  </div>
+</section>
+
+<section id="grading">
+  <div class="wrap">
+    <span class="eyebrow">Grading &amp; policies</span>
+    <h2>How you're evaluated</h2>
+    <p class="lede">Letter grade or credit/no-credit.</p>
+
+    <div class="gradegrid">
+      <div class="gradebars">
+        <div class="gbar">
+          <div class="glabel"><span class="n">Individual work</span><span class="pct">10%</span></div>
+          <div class="track"><div class="fill alt" data-pct="10"></div></div>
+          <div class="sub">Discovery brief and working prototype (Weeks 2–3)</div>
+        </div>
+        <div class="gbar">
+          <div class="glabel"><span class="n">Team project</span><span class="pct">60%</span></div>
+          <div class="track"><div class="fill" data-pct="60"></div></div>
+          <div class="sub">Proposal 10% · midterm report &amp; working build 15% · final report &amp; Demo Day 35%</div>
+        </div>
+        <div class="gbar">
+          <div class="glabel"><span class="n">Participation</span><span class="pct">30%</span></div>
+          <div class="track"><div class="fill alt" data-pct="30"></div></div>
+          <div class="sub">In-class discussion, pop quizzes, and acting as a peer eval rater for two other teams</div>
+        </div>
+      </div>
+      <div class="gradecols">
+        <div>
+          <h3>Team project criteria</h3>
           <ul>
-            <li>Sculley et al., "Hidden Technical Debt in ML Systems" (NeurIPS, 2015)</li>
-            <li>Yan, "Patterns for Building LLM-based Systems &amp; Products" (2023)</li>
-            <li class="opt">Optional: Karpathy, "Software Is Changing (Again)" (YC AI Startup School, 2025)</li>
+            <li>Problem identification and user understanding</li>
+            <li>Product and technical decisions, incl. responsible AI</li>
+            <li>Working product quality</li>
+            <li>Evaluation rigor</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Participation</h3>
+          <ul>
+            <li>Use two other teams' products and submit a short structured review against their stated success criteria</li>
+            <li>Attendance required: up to 2 absences, tracked via pop quizzes in every session</li>
           </ul>
         </div>
       </div>
+    </div>
 
-      <div class="week-card">
-        <div class="head"><h3>Week 2: Product Discovery in the Age of AI</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Surface real user needs through interviews and jobs-to-be-done; use AI to synthesize research while judging whether its output is genuine signal or sophisticated noise.</p>
-          <h4>Deliverable</h4>
-          <p>Discovery brief for a product / agent idea with explicit AI-fit assessment.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Christensen et al., "Know Your Customers' Jobs to Be Done" (HBR, 2016)</li>
-            <li>Park et al., "Generative Agent Simulations of 1,000 People" (2024)</li>
-            <li class="opt">Optional: Hämäläinen et al., "Evaluating LLMs in Generating Synthetic HCI Research Data" (CHI, 2023)</li>
-          </ul>
-        </div>
+    <div class="floor">
+      <b>Two things worth knowing up front.</b> Project grades are individual — final scores are adjusted by peer evaluation from your project partners, so teammates may receive different grades. And you must earn at least 50% of available participation points to pass, regardless of project performance.
+    </div>
+
+    <div class="polrow">
+      <div><b>Deadlines:</b> deliverables due at noon the day of class</div>
+      <div><b>Extensions:</b> one 48-hr extension, no questions asked; after that, 10%/day</div>
+      <div><b>Accommodations:</b> students with OAE letters should share them early in the quarter; accommodations follow OAE guidance</div>
+      <div><b>AI tools:</b> encouraged, but submitted work must reflect your own thinking</div>
+    </div>
+  </div>
+</section>
+
+<section id="instructors">
+  <div class="wrap">
+    <span class="eyebrow">Instructors</span>
+    <h2>Taught by a professor and two practitioners</h2>
+    <div class="people">
+      <div class="person card">
+        <div class="ava" aria-hidden="true">MU</div>
+        <h3>Madeleine Udell</h3>
+        <span class="role">Assistant Professor · Stanford MS&amp;E</span>
+        <p>Assistant Professor of Management Science &amp; Engineering at Stanford. Her research develops optimization and machine learning methods for messy, large-scale data; she teaches Stanford courses on AI and optimization, including MS&amp;E 318, "Constrained and Safe AI." PhD in Computational &amp; Mathematical Engineering from Stanford.</p>
+        <a class="plink" href="https://web.stanford.edu/~udell/">Stanford profile ↗</a>
       </div>
-
-      <div class="week-card">
-        <div class="head"><h3>Week 3: Evals Fundamentals</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Build a prototype, then learn to tell whether it's any good: choose evaluation dimensions, score outputs, read benchmarks skeptically (Goodhart, gaming), and weigh human against automated judges. In-class lab: interactive case study, followed by a workshop to design evals for students' own prototypes.</p>
-          <h4>Deliverable</h4>
-          <p>Working prototype of the idea from your discovery brief.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Zheng et al., "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena" (NeurIPS, 2023)</li>
-            <li>Miller, "Adding Error Bars to Evals" (Anthropic, 2024)</li>
-            <li class="opt">Optional: Tan et al., "JudgeBench" (2024)</li>
-            <li class="opt">Optional: Tyser et al., "AI-Driven Review Systems" (2024)</li>
-          </ul>
-        </div>
+      <div class="person card">
+        <div class="ava" aria-hidden="true">DE</div>
+        <h3>Darius Emrani</h3>
+        <span class="role">Adjunct Lecturer · CEO, Scorecard AI</span>
+        <p>CEO of Scorecard AI, which builds simulation and evaluation infrastructure for AI agents. Previously PM for Simulation at Waymo, growing the eval and simulation team from dozens to 200+ engineers and helping launch the first commercial autonomous ride-hail service. Earlier: Uber ATG, SpaceX avionics. Graduate work in MS&amp;E at Stanford.</p>
+        <a class="plink" href="https://www.linkedin.com/in/dariusemrani/">LinkedIn ↗</a>
       </div>
-
-      <div class="phase">
-        <p class="phase-title">Team Phase · Weeks 4–10</p>
-        <p class="phase-sub">Teams of four form in Week 4, organized around three gates.</p>
+      <div class="person card">
+        <div class="ava" aria-hidden="true">PN</div>
+        <h3>Pasha Nahass</h3>
+        <span class="role">Adjunct Lecturer · Product Lead, Google DeepMind</span>
+        <p>Product Lead at Google DeepMind on the Gemini App, bringing AI experiences to smartwatches, cars, headphones, and XR glasses. Previously product roles across Google (YouTube Living Room, ML/AI for Ads) after starting as an engineer at Amazon. BS and MS in CS from Stanford, MBA from Harvard Business School, former CS106 section leader.</p>
+        <a class="plink" href="https://www.linkedin.com/in/pasha-nahass-b5aa3628">LinkedIn ↗</a>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="week-card">
-        <div class="head"><h3>Week 4: Improving the Product</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Turn evaluation into an improvement loop: pick the right lever (prompt → retrieval → scaffolding → fine-tune → RL) and apply self-improvement methods including adversarial self-improvement and recursive self-improvement — while avoiding optimizing your measure into meaninglessness.</p>
-          <h4>Deliverable</h4>
-          <p class="gate">Gate 1: Form teams and draft project proposal (~3 pages)</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Ouyang et al., "Training Language Models to Follow Instructions with Human Feedback" (InstructGPT, 2022)</li>
-            <li>Yuan et al., "Self-Rewarding Language Models" (2024)</li>
-            <li class="opt">Optional: Christiano et al., "Deep Reinforcement Learning from Human Preferences" (NeurIPS, 2017)</li>
-          </ul>
-        </div>
+<section id="faq">
+  <div class="wrap">
+    <span class="eyebrow">FAQ</span>
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details class="qa">
+        <summary>Who can enroll?</summary>
+        <p>Open to all Stanford students; designed primarily for upper-division undergraduates and master's students (MS&amp;E, CS, Symbolic Systems, EE). Enrollment is capped at 48 students — 12 teams of 4.</p>
+      </details>
+      <details class="qa">
+        <summary>Do I need AI or machine learning experience?</summary>
+        <p>No. CS 106A or equivalent programming experience is the only requirement. Optional onboarding modules cover how LLMs work, git and AI coding tools, APIs, databases, deployment, and stats; complete them by Week 3.</p>
+      </details>
+      <details class="qa">
+        <summary>I'm not a strong coder — will I keep up?</summary>
+        <p>Yes, by design. The onboarding modules get you from CS 106A to shipping an AI-assisted app before Week 3, and the individual-phase prototype is expected to be built <em>with</em> AI coding tools. That's the skill being taught. Teams of four need product judgment, user research, and evaluation rigor as much as code; those are graded criteria, not extras.</p>
+      </details>
+      <details class="qa">
+        <summary>What's the time commitment?</summary>
+        <p>3 units: one 2-hour session per week plus project work outside class, intensifying during the team phase (Weeks 4–10) as your team builds toward the midterm and Demo Day.</p>
+      </details>
+      <details class="qa">
+        <summary>Do I need my own product idea?</summary>
+        <p>No. Teams may pick or adapt a starter project, or bring their own idea and defend its AI fit in the Week 4 proposal.</p>
+      </details>
+      <details class="qa">
+        <summary>How do teams form?</summary>
+        <p>Teams of four form in Week 4, after everyone has shipped and evaluated a solo prototype in Weeks 1–3. The team's project proposal is due the same week.</p>
+      </details>
+      <details class="qa">
+        <summary>What's the attendance policy?</summary>
+        <p>Attendance is required, with up to 2 absences, tracked through pop quizzes in every session (including guest lectures). You must earn at least 50% of participation points to pass.</p>
+      </details>
+      <details class="qa">
+        <summary>Which AI tools and models will we use?</summary>
+        <p>Students choose their own AI coding tool (Cursor, Claude Code, or Antigravity) and get API access to at least one frontier model during onboarding. Full tooling and infrastructure details are shared with enrolled students.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="updates">
+  <div class="wrap">
+    <div class="updates card">
+      <div>
+        <h2>Interested in taking the course?</h2>
+        <p>Enrollment updates, the speaker lineup, and logistics as Fall 2026 approaches.</p>
       </div>
+      <a class="btn btn-solid" href="#" data-form>Join the interest list</a>
+    </div>
+  </div>
+</section>
+</main>
 
-      <div class="week-card">
-        <div class="head"><h3>Week 5: Multi-Turn Evaluation and Simulation</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Judge behavior across whole interactions, and build simulated users to test at scale, anchoring on measuring the sim-to-real gap.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Yao et al., "τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains" (2024)</li>
-            <li>"Lost in Simulation: LLM-Simulated Users are Unreliable Proxies for Human Users in Agentic Evaluations" (2026)</li>
-            <li class="opt">Optional: Anthropic, "Demystifying Evals for AI Agents" (2026)</li>
-          </ul>
-        </div>
-      </div>
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="fm"><b>MS&amp;E 203</b> · Building and Evaluating AI Products and Agents</div>
+      <div>Stanford University · Department of Management Science &amp; Engineering · Fall 2026</div>
+    </div>
+    <div>
+      <div class="fm">Course email: TBA</div>
+      <div>Ed Discussion and Canvas links will be provided to enrolled students.<br>This page reflects a draft syllabus; details subject to change.</div>
+    </div>
+  </div>
+  <div class="wrap sulegal">&copy; Stanford University. Stanford, California 94305.</div>
+</footer>
 
-      <div class="week-card">
-        <div class="head"><h3>Week 6: User Research Beyond the Metrics</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Where qualitative research complements granular evals — sentiment, the felt experience, diary studies, and AI-generated users — and where they break down.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Amershi et al., "Guidelines for Human-AI Interaction" (CHI, 2019)</li>
-            <li>"The Use of LLMs in HCI: A Critical Analysis of Synthetic Users" (Augmented Humans, 2025)</li>
-            <li class="opt">Optional: Weisz et al., "Design Principles for Generative AI Applications" (CHI, 2024)</li>
-          </ul>
-        </div>
-      </div>
+<script>
+(function(){
+  // INTEREST FORM: swap this one URL for the real Google Form. Until then,
+  // the buttons render as an honest "opens soon" state instead of a dead link.
+  var FORM_URL='https://forms.gle/REPLACE-WITH-REAL-FORM';
+  document.querySelectorAll('a[data-form]').forEach(function(a){
+    if(FORM_URL.indexOf('REPLACE')>-1){
+      a.textContent='Interest list opens in August';
+      a.removeAttribute('href');
+      a.style.opacity='.65';
+      a.style.cursor='default';
+    }else{
+      a.href=FORM_URL;
+    }
+  });
 
-      <div class="week-card">
-        <div class="head"><h3>Week 7: Case Study — When AI Products Fail</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Diagnose real failures as systemic rather than single-cause, and identify the eval, guardrail, or research that would have caught each. E.g., Air Canada was held legally liable when its support bot invented a bereavement-refund policy that didn't exist.</p>
-          <h4>Deliverable</h4>
-          <p>Eval feedback for two other teams' projects.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Bainbridge, "Ironies of Automation" (Automatica, 1983)</li>
-            <li>OpenAI, "Expanding on What We Missed with Sycophancy" (2025)</li>
-            <li>Case sourcing: "When AI Fails, What Works? A Data-Driven Taxonomy of Real-World Risk Mitigation Strategies" (2026)</li>
-          </ul>
-        </div>
-      </div>
+  // Grading bars: width derives from data-pct so bar and label can't drift.
+  document.querySelectorAll('.gbar .fill[data-pct]').forEach(function(f){f.style.width=f.dataset.pct+'%';});
 
-      <div class="week-card">
-        <div class="head"><h3>Week 8: Responsible AI</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Red-team for worst-case and harmful behavior, address agentic safety risks (destructive actions, leaked secrets), and weigh who sets the boundaries on AI use.</p>
-          <h4>Deliverable</h4>
-          <p class="gate">Gate 2: Midterm report (~5 pages + working build)</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Amodei et al., "Concrete Problems in AI Safety" (2016)</li>
-            <li>Ganguli et al., "Red Teaming Language Models to Reduce Harms" (Anthropic, 2022)</li>
-            <li>Lab tool: Debenedetti et al., "AgentDojo" (NeurIPS, 2024)</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="week-card">
-        <div class="head"><h3>Week 9: Case Study — Voice and Multimodal</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Evaluate beyond text, where latency, tone, turn-taking, and cross-modal grounding create new failure modes, with worked-through real product examples.</p>
-          <h4>Reading</h4>
-          <ul>
-            <li>Clark &amp; Brennan, "Grounding in Communication" (1991)</li>
-            <li>Sierra, "τ-voice: Benchmarking Full-Duplex Voice Agents" (2026)</li>
-            <li class="opt">Optional: Selvakumar et al., "MULTIVOX" (EMNLP, 2025)</li>
-            <li class="opt">Optional: Lin et al., "Full-Duplex-Bench" (2025)</li>
-            <li class="opt">Optional: Lee et al., "Holistic Evaluation of Text-to-Image Models (HEIM)" (NeurIPS, 2023)</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="week-card">
-        <div class="head"><h3>Week 10: Demo Day</h3></div>
-        <div class="body">
-          <h4>Topics</h4>
-          <p>Defend an evidence-backed ship-or-don't-ship call with your eval results and a concrete next-iteration plan, before outside judges.</p>
-          <h4>Deliverable</h4>
-          <p class="gate">Gate 3: Demo Day (12-min demo; 5–7 page report due 72 hrs after class)</p>
-          <p>Peer feedback and ratings.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="grading">
-      <h2>Grading</h2>
-      <table class="grade-table">
-        <thead>
-          <tr><th>Category</th><th>Component</th><th>Weight</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="cat">Individual work</td>
-            <td>Discovery brief, working prototype</td>
-            <td class="wt">10%</td>
-          </tr>
-          <tr>
-            <td class="cat">Team project</td>
-            <td>
-              <ul>
-                <li>Project proposal (10%)</li>
-                <li>Midterm report &amp; working build (15%)</li>
-                <li>Final report &amp; Demo Day (35%)</li>
-              </ul>
-            </td>
-            <td class="wt">60%</td>
-          </tr>
-          <tr>
-            <td class="cat">Participation</td>
-            <td>In-class discussion, pop quizzes, and acting as a peer eval rater for two other teams</td>
-            <td class="wt">30%</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Team Project Criteria</h3>
-      <p>Project work (proposal, midterm report, and final report) will be graded on:</p>
-      <ul class="goals">
-        <li>Problem identification and user understanding</li>
-        <li>Product and technical decisions (incl. responsible AI)</li>
-        <li>Working product quality</li>
-        <li>Evaluation rigor</li>
-      </ul>
-      <p>Project grades are individual, not purely team-based: the final project score is adjusted by a peer evaluation from project partners rating each member's contribution, so students on the same project may receive different final project grades.</p>
-
-      <h3>Participation Criteria</h3>
-      <p>Each student uses two other teams' products and submits a short structured review (user observations plus a rating against the team's stated success criteria). Attendance is required, with up to 2 absences across the quarter, tracked through pop quizzes at random points in every session, graded on engagement. Students must earn at least 50% of available participation points to pass the course; falling below this threshold results in a failing grade regardless of project performance.</p>
-
-      <h3>Policies</h3>
-      <p>Deliverables are due at noon the day of class. One 48-hour extension per student, no questions asked; for further accommodations, a letter from the Office of Accessible Education is required. Otherwise, each additional late day incurs a 10% penalty per day. AI tools are encouraged, but submitted work must reflect the students' own thinking.</p>
-    </section>
-
-    <section id="appendix">
-      <h2>Appendix A: Onboarding Modules (Optional)</h2>
-      <p>These modules are optional, for students without the relevant background. Each is its own live walkthrough on Google Meet in the first week or two, recorded, with questions taken live; the content also lives in a shared Google Doc open for comments. Modules 1 and 2 end in hands-on tasks that chain: the output of each module is the input to the next, so students finish with one small app they built, shipped, and measured. All modules (or equivalent knowledge) should be completed by the Week 3 session.</p>
-
-      <div class="card">
-        <h3>Module 0: How LLMs Actually Work <span class="time">· ~1–3.5 hrs, self-paced</span></h3>
-        <p>Watch Karpathy, "Deep Dive into LLMs like ChatGPT" (2025). Students new to LLMs should watch in full; everyone should at minimum watch the chapters on hallucinations and tool use (1:20:32), models need tokens to think (1:46:56), jagged intelligence (2:04:53), and RLHF (2:48:26), which ground the evaluation and failure-mode work in Weeks 3–7. Unlike Modules 1–3, there is no live session; questions go in the shared doc.</p>
-      </div>
-
-      <div class="card">
-        <h3>Module 1: Development Setup — Git and AI Coding Tools <span class="time">· ~1.5 hrs</span></h3>
-        <p>Students watch the provided 20-minute intro-to-git tutorial, then pick one AI coding tool (Cursor, Claude Code, or Antigravity) and skim its quickstart, linked in the module. <strong>Task:</strong> build something trivial, such as a to-do app or a calculator, from a plain-English prompt, then commit and push it to a new repo. The point is to get a first rep of AI-assisted building in before Week 3's prototype lab, and to be able to collaborate on team code without friction.</p>
-      </div>
-
-      <div class="card">
-        <h3>Module 2: Shipping a Prototype — APIs, Data, and Hosting <span class="time">· ~1.5 hrs</span></h3>
-        <p>Everything needed to get a prototype running, reachable, and handling data responsibly. Students get API access to at least one frontier model (OpenAI, Anthropic, or Google) and follow the provided quickstart to make a first call. The module also covers security basics like API key handling and keeping code separate from customer data. A database quickstart (Supabase or a local SQLite file) shows the basic write-and-read pattern, and students get oriented to deploying on a web host like Vercel. <strong>Task:</strong> extend your Module 1 app with one feature that calls a model API and stores the result in a database, then deploy it to a live URL with the API key stored as an environment variable.</p>
-      </div>
-
-      <div class="card">
-        <h3>Module 3: Stats Refresher <span class="time">· ~30 min</span></h3>
-        <p>A short provided explainer on expected value, variance, and confidence intervals, drawn on when scoring outputs and reading error bars in Week 3. Intended mainly for students who haven't taken the recommended probability or statistics coursework.</p>
-      </div>
-
-      <h2 style="margin-top:48px;">Appendix B: Starter Projects</h2>
-      <p>Some example project ideas teams may pick from or adapt. Each is scoped to a 7-week build and teaches a distinct evaluation lesson.</p>
-
-      <div class="card">
-        <h3>Meeting Notetaker with Structured Outputs</h3>
-        <p>A desktop assistant that runs alongside calls without joining as a bot, captures the user's typed shorthand alongside the audio, and produces action items, decisions, and owner-tagged open questions. <strong>Teaches LLM-as-judge calibration against humans:</strong> students collect real meetings, hand-label "good action item" examples, then build an LLM judge and measure its agreement with humans before trusting it for scaled evaluation.</p>
-      </div>
-
-      <div class="card">
-        <h3>First-Pass Content Moderation for a Real Online Community</h3>
-        <p>Partner with one Discord server, subreddit, or open Slack and build the first-pass moderator: flag, route to a human, or auto-action. Students specify the policy in plain English, build the classifier, and ship a moderator UI. <strong>Teaches asymmetric error costs:</strong> false-positive harms and false-negative harms have very different shapes, and the team must build separate dashboards for each and defend their threshold choice.</p>
-      </div>
-
-      <div class="card">
-        <h3>Fantasy Sports Draft Copilot with Model Tiering</h3>
-        <p>Sync to a fantasy league. During the live draft, give real-time recommendations with rationale (fast, cheap inference). During the season, give weekly start/sit advice with confidence intervals and post-mortems (slower, deeper analysis). <strong>Teaches cost optimization by tiering models</strong> (Haiku class for draft turn, Opus class for weekly recap) and forces students to defend the routing decision.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p class="t">MS&amp;E 203: Building and Evaluating AI Products and Agents</p>
-    <p>Stanford University · Fall 2026 · Madeleine Udell, Darius Emrani, Pasha Nahass</p>
-  </footer>
+  var t=document.getElementById('navToggle'),l=document.getElementById('navlinks');
+  function closeMenu(){l.classList.remove('open');t.setAttribute('aria-expanded','false');}
+  t.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=l.classList.toggle('open');
+    t.setAttribute('aria-expanded',open?'true':'false');
+  });
+  l.addEventListener('click',function(e){if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&l.classList.contains('open')){closeMenu();t.focus();}
+  });
+  document.addEventListener('click',function(e){
+    if(l.classList.contains('open')&&!l.contains(e.target)&&e.target!==t)closeMenu();
+  });
+})();
+</script>
 </body>
 </html>
